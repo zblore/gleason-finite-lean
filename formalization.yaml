@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "gleason-finite-lean"
+  description: >-
+    A machine-checked proof of Gleason's theorem in finite dimensions. On a complex Hilbert space
+    of dimension at least 3, every frame function on the orthogonal projections has the form
+    P ↦ Re Tr(ρP) for exactly one density operator ρ. The statement is Kim Morrison's lean-eval
+    problem gleason_theorem_finite, unchanged. The proof follows Cooke, Keane and Moran's
+    elementary proof of Gleason's core lemma for matrices on ℂᴺ, then moves the result to
+    operators by taking matrices in an orthonormal basis.
+  authors:
+    - name: "Zayn Blore"
+      orcid: "0009-0009-8447-7247"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - name: "Zayn Blore"
+      orcid: "0009-0009-8447-7247"
+
+classification:
+  arxiv: ["math-ph", "quant-ph"]
+  msc2020: ["81P10", "81P16", "46C05", "46N50"]
+
+sources:
+  - title: "Measures on the closed subspaces of a Hilbert space"
+    authors:
+      - "Andrew M. Gleason"
+    id: "https://doi.org/10.1512/iumj.1957.6.56050"
+    type: "article"
+    location: "Journal of Mathematics and Mechanics 6 (1957), 885-893"
+    relationship: "formalizes"
+    note: >-
+      The theorem. Gleason also covers separable infinite-dimensional spaces and the real case.
+      This repository proves the finite-dimensional complex case.
+    author_endorsement: "n/a"
+  - title: "An elementary proof of Gleason's theorem"
+    authors:
+      - "Roger Cooke"
+      - "Michael Keane"
+      - "William Moran"
+    id: "https://doi.org/10.1017/S0305004100063313"
+    type: "article"
+    location: "Mathematical Proceedings of the Cambridge Philosophical Society 98 (1985), 117-128"
+    relationship: "formalizes"
+    note: >-
+      The proof of Gleason's core lemma followed in GleasonFinite/Gleason/Sphere.lean through
+      GleasonFinite/Gleason/General.lean.
+    author_endorsement: "not-contacted"
+  - title: "Foundations of Quantum Physics"
+    authors:
+      - "Constantin Piron"
+    type: "book"
+    location: "W. A. Benjamin, 1976"
+    relationship: "background"
+    note: "Piron's geometric lemma, as presented in Cooke, Keane and Moran section 5."
+    author_endorsement: "n/a"
+  - title: "lean-eval problem gleason_theorem_finite"
+    contributors:
+      - name: "Kim Morrison"
+        role: "problem-proposer"
+    id: "https://github.com/leanprover/lean-eval/blob/0e093293afbe96be91504ae6e44947876d3fc84e/manifests/problems/gleason_theorem_finite.toml"
+    type: "formal problem statement"
+    location: "leanprover/lean-eval, LeanEval/Analysis/Gleason.lean"
+    relationship: "other"
+    note: >-
+      Supplies the Lean statement and the three definitions it uses (IsOrthProj, FrameFunction,
+      reTr). Challenge.lean uses them unchanged apart from the module header, @[expose] on the
+      two definitions, and moving the definitions into Challenge.lean from lean-eval's
+      ChallengeDeps.lean. lean-eval archived the problem on 20 August 2026, so its server no longer
+      takes solutions.
+
+related_formalizations:
+  - id: "https://github.com/zblore/lean-eval-gleason"
+    relationship: "other"
+    note: >-
+      The same proof laid out as a lean-eval workspace, with lean-eval's fixed files byte for byte.
+      Its CI runs Comparator and nanoda with lean-eval's own tool pins and passes.
+  - id: "https://github.com/zblore/csd-lean4"
+    relationship: "builds-on"
+    note: >-
+      My larger Lean project. The files in GleasonFinite/Gleason come from its Mathlib-only
+      Gleason tree at commit 4b396fa3, ported to Lean v4.35.0-rc3. That tree imports only Mathlib.
+  - id: "https://github.com/Bobart0/gleason-theorem-lean"
+    relationship: "independent"
+    note: >-
+      An earlier formalisation of the same finite-dimensional complex case by the same
+      Cooke-Keane-Moran route, together with Busch's theorem. Developed separately from this one.
+  - id: "https://github.com/markkasaurus/gleason-theorem-lean"
+    relationship: "independent"
+    note: >-
+      An earlier formalisation of Gleason's theorem for separable real and complex Hilbert spaces,
+      which is more general than this one.
+  - id: "PALOMAR-2026-08-31-000014"
+    relationship: "other"
+    note: >-
+      Stephanie Alexander's registered formalisation of Busch's theorem for effects in finite
+      dimensions. A related result, not this one.
+
+status:
+  scope: >-
+    Gleason's theorem for a finite-dimensional complex Hilbert space of dimension at least 3,
+    with frame functions additive on orthogonal pairs of projections (in finite dimensions this
+    gives additivity on every orthogonal family). Existence and uniqueness of the density operator
+    are both proved. Not covered: infinite-dimensional spaces, real Hilbert spaces, and Busch's
+    extension to effects. The theorem is false in dimension 2.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["Claude"]
+      framework: "Claude Code"
+  notes: "I drafted the Lean with Claude Code."
+
+fidelity:
+  divergences: >-
+    None in the statement, which is lean-eval's. Compared with Gleason's paper the scope is the
+    finite-dimensional complex case only.
+
+review:
+  status: "author-verified"
+  reviewers:
+    - "Zayn Blore"
+    - "Claude Fable 5.1 (independent agent review of the Gleason proof in csd-lean4)"
+    - "OpenAI Astra (independent review of the Gleason proof in csd-lean4, from 23 September 2026)"
+  notes: >-
+    Comparator with nanoda accepts the lean-eval layout of this proof with lean-eval's tool pins
+    (https://github.com/zblore/lean-eval-gleason/actions/runs/36749178099). The proof uses only
+    propext, Classical.choice and Quot.sound. No sorry, admit or native_decide.
+
+alignment:
+  namespace: "LeanEval.Analysis"
+  statements:
+    - source: "Gleason 1957, the theorem in finite dimensions; lean-eval gleason_theorem_finite"
+      lean: "gleason_theorem_finite"
+      module: "Solution"
+      status: "proved"
+
+acknowledgements: >-
+  Thanks to Kim Morrison for the lean-eval statement, and to the authors of Lean 4 and Mathlib.
